@@ -1,32 +1,29 @@
 package com.example.app3;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.provider.Telephony;
+import android.os.Bundle;
+import android.telephony.SmsMessage;
 import android.widget.EditText;
-
-import java.util.Objects;
 
 public class SmsReceiver extends BroadcastReceiver {
 
-    private final EditText editText;
-
-    public SmsReceiver(EditText editText) {
-        this.editText = editText;
-    }
-
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Objects.equals(intent.getAction(), Telephony.Sms.Intents.SMS_RECEIVED_ACTION)) {
-
-            Cursor cursor = context.getContentResolver().query(Telephony.Sms.CONTENT_URI, null, null, null, Telephony.Sms.DEFAULT_SORT_ORDER + " LIMIT 1");
-            if (cursor != null && cursor.moveToFirst()) {
-                @SuppressLint("Range") String messageBody = cursor.getString(cursor.getColumnIndex(Telephony.Sms.BODY));
-                editText.setText(messageBody);
-                cursor.close();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            Object[] pdus = (Object[]) bundle.get("pdus");
+            if (pdus != null) {
+                SmsMessage[] messages = new SmsMessage[pdus.length];
+                for (int i = 0; i < pdus.length; i++) {
+                    messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
+                }
+                String messageBody = messages[messages.length - 1].getMessageBody(); 
+                Intent activityIntent = new Intent(context, MainActivity.class);
+                activityIntent.putExtra("sms", messageBody);
+                activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(activityIntent);
             }
         }
     }

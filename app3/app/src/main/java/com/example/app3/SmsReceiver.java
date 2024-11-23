@@ -19,7 +19,8 @@ public class SmsReceiver extends BroadcastReceiver {
                 for (int i = 0; i < pdus.length; i++) {
                     messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
                 }
-                String messageBody = messages[messages.length - 1].getMessageBody(); 
+                String messageBody = messages[messages.length - 1].getMessageBody();
+
                 Intent activityIntent = new Intent(context, MainActivity.class);
                 activityIntent.putExtra("sms", messageBody);
                 activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

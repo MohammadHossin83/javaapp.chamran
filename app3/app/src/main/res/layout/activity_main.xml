@@ -7,10 +7,8 @@
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="پیامک دریافتی"
+        android:hint="پیامک دریافتی را اینجا ببینید"
         android:inputType="textMultiLine"
-        android:lines="5"
         android:gravity="top|start"
-        android:padding="10dp" />
-
+        android:padding="16dp"/>
 </RelativeLayout>
